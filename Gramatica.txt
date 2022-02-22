@@ -1,0 +1,122 @@
+s::= 
+                        graph s
+                        |execute s
+                        | graph
+                        | execute
+                        ;
+
+fin::= 
+                        SEMICOLON
+                        ;
+
+graph::= 
+                        DEF BARRAS LBRACE cuerpo_barras RBRACE
+                        |DEF PIE LBRACE cuerpo_pie RBRACE
+                        ;
+
+cuerpo_barras::= 
+                        statement_barras fin cuerpo_barras
+                        |statement_barras fin
+                        ;
+statement_barras::= 
+                        titulo  
+                        |ejex  
+                        |ejey  
+                        |unir  
+                        ;
+
+titulo::= 
+                        TITULO COLON CADENA
+                        ;
+ejex::= 
+                        EJEX COLON array_strings
+                        ;
+array_strings::= 
+                        LBRACKET strings RBRACKET
+                        ;
+strings::= 
+                        CADENA
+                        |CADENA COMMA strings
+                        ;
+ejey::=
+                        EJEY COLON array_operations
+                        ;
+array_operations::=     
+                        LBRACKET operations_comma RBRACKET
+                        ;
+operations_comma::=
+                        operation
+                        |operation COMMA operations_comma
+                        ;
+
+unir::=
+                        UNIR COLON array_tuplas
+                        ;
+array_tuplas::=
+                        LBRACKET tuplas_comma RBRACKET
+                        ;
+tuplas_comma::= 
+                        tupla
+                        |tupla COMMA tuplas_comma
+                        ;
+tupla::=
+                        LBRACE operation COMMA operation RBRACE
+                        ;
+                        
+operation::=
+                        expression op
+                        ;
+op::=
+                        PLUS expression op
+                        |MINUS expression op
+                        | 
+                        ;
+expression::=
+                        term ep
+                        ;
+ep::=
+                        DIVIDED term ep
+                        |TIMES term ep
+                        |
+                        ;
+term::=
+                        LPAREN operation RPAREN
+                        |INTEGER
+                        |DECIMAL
+                        |MINUS term
+                        ;
+
+cuerpo_pie::=
+                        statement_pie fin cuerpo_barras
+                        | statement_pie fin
+statement_pie::=        
+                        titulo
+                        |etiquetas
+                        |valores
+                        |unir
+                        |tipo
+                        |total 
+                        |extra 
+                        ;                        
+etiquetas::=
+                        ETIQUETAS COLON array_strings
+                        ;
+valores::=
+                        VALORES COLON array_operations
+                        ;
+tipo::=
+                        TIPO COLON  pie_types
+                        ;
+pie_types::=
+                        CANTIDAD
+                        |PORCENTAJE
+                        ;
+total::=
+                        TOTAL COLON operation
+                        ;
+extra::=
+                        EXTRA COLON CADENA
+                        ;
+execute::=
+                        EJECUTAR LPAREN CADENA RPAREN fin
+                        ;

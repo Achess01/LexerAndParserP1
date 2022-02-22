@@ -1,0 +1,187 @@
+package com.achess.project1test.parser;
+
+import java_cup.runtime.*;
+import com.achess.project1test.lexer.LexerP1;
+
+parser code {:
+
+    public ParserP1(LexerP1 lexer){
+        super(lexer);
+    }
+:}
+
+
+terminal SEMICOLON, COLON, COMMA;
+terminal LBRACE, RBRACE;
+terminal LBRACKET, RBRACKET;
+terminal LPAREN, RPAREN;
+terminal STRING;
+
+terminal PLUS, MINUS, DIVISION, TIMES;
+terminal INTEGER, DECIMAL;
+// Graphs definition
+terminal DEF, BARRAS, PIE;
+terminal TITULO, EJEX, EJEY, UNIR;
+terminal ETIQUETAS, VALORES, TIPO, EXTRA, CANTIDAD, PORCENTAJE, TOTAL;
+
+terminal EJECUTAR;
+
+
+non terminal s, fin;
+non terminal graph, cuerpo_barras, statement_barras, cuerpo_pie, statement_pie;
+non terminal titulo;
+non terminal ejex;
+non terminal ejey;
+non terminal unir;
+non terminal etiquetas;
+non terminal valores;
+non terminal tipo;
+non terminal total;
+non terminal extra;
+non terminal execute;
+
+non terminal pie_types;
+
+non terminal array_strings;
+non terminal strings;
+non terminal array_operations;
+non terminal array_tuplas;
+non terminal operations_comma;
+non terminal tuplas_comma;
+non terminal tupla;
+
+non terminal operation;
+non terminal op;
+non terminal expression;
+non terminal ep;
+non terminal term;
+
+
+
+
+
+
+
+s::= 
+                        graph s
+                        |execute s
+                        | graph
+                        | execute
+                        ;
+
+fin::= 
+                        SEMICOLON
+                        ;
+
+graph::= 
+                        DEF BARRAS LBRACE cuerpo_barras RBRACE
+                        |DEF PIE LBRACE cuerpo_pie RBRACE
+                        ;
+
+cuerpo_barras::= 
+                        statement_barras fin cuerpo_barras
+                        |statement_barras fin
+                        ;
+statement_barras::= 
+                        titulo  
+                        |ejex  
+                        |ejey  
+                        |unir  
+                        ;
+
+titulo::= 
+                        TITULO COLON STRING
+                        ;
+ejex::= 
+                        EJEX COLON array_strings
+                        ;
+array_strings::= 
+                        LBRACKET strings RBRACKET
+                        ;
+strings::= 
+                        STRING
+                        |STRING COMMA strings
+                        ;
+ejey::=
+                        EJEY COLON array_operations
+                        ;
+array_operations::=     
+                        LBRACKET operations_comma RBRACKET
+                        ;
+operations_comma::=
+                        operation
+                        |operation COMMA operations_comma
+                        ;
+
+unir::=
+                        UNIR COLON array_tuplas
+                        ;
+array_tuplas::=
+                        LBRACKET tuplas_comma RBRACKET
+                        ;
+tuplas_comma::= 
+                        tupla
+                        |tupla COMMA tuplas_comma
+                        ;
+tupla::=
+                        LBRACE operation COMMA operation RBRACE
+                        ;
+                        
+operation::=
+                        expression op
+                        ;
+op::=
+                        PLUS expression op
+                        |MINUS expression op
+                        | 
+                        ;
+expression::=
+                        term ep
+                        ;
+ep::=
+                        DIVISION term ep
+                        |TIMES term ep
+                        |
+                        ;
+term::=
+                        LPAREN operation RPAREN
+                        |INTEGER
+                        |DECIMAL
+                        |MINUS term
+                        ;
+
+cuerpo_pie::=
+                        statement_pie fin cuerpo_barras
+                        | statement_pie fin
+                        ;
+statement_pie::=        
+                        titulo
+                        |etiquetas
+                        |valores
+                        |unir
+                        |tipo
+                        |total 
+                        |extra 
+                        ;                        
+etiquetas::=
+                        ETIQUETAS COLON array_strings
+                        ;
+valores::=
+                        VALORES COLON array_operations
+                        ;
+tipo::=
+                        TIPO COLON  pie_types
+                        ;
+pie_types::=
+                        CANTIDAD
+                        |PORCENTAJE
+                        ;
+total::=
+                        TOTAL COLON operation
+                        ;
+extra::=
+                        EXTRA COLON STRING
+                        ;
+execute::=
+                        EJECUTAR LPAREN STRING RPAREN fin
+                        ;
