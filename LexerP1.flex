@@ -13,9 +13,9 @@ import com.achess.project1test.parser.sym;
 //%standalone
 
 
-%{
-    
-%}
+%eofval{
+  return new Symbol(sym.EOF);
+%eofval}
 
 LineTerminator = \r|\n|\r\n
 //WhiteSpace = {LineTerminator} | [ \t\f]

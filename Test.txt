@@ -4,3 +4,5 @@ def Barras{
     ejey:[5, 10+5.453];
     unir:[{0,1}, {1,0}];
 }
+
+Ejecutar("Hola amigos");
