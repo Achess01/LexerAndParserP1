@@ -2,6 +2,7 @@ package com.achess.project1test.parser;
 
 import java_cup.runtime.*;
 import com.achess.project1test.lexer.LexerP1;
+import com.achess.project1test.Operation;
 
 parser code {:
 
@@ -18,7 +19,7 @@ terminal LPAREN, RPAREN;
 terminal STRING;
 
 terminal PLUS, MINUS, DIVISION, TIMES;
-terminal INTEGER, DECIMAL;
+terminal Double INTEGER, DECIMAL;
 // Graphs definition
 terminal DEF, BARRAS, PIE;
 terminal TITULO, EJEX, EJEY, UNIR;
@@ -50,11 +51,9 @@ non terminal operations_comma;
 non terminal tuplas_comma;
 non terminal tupla;
 
-non terminal operation;
-non terminal op;
-non terminal expression;
-non terminal ep;
-non terminal term;
+non terminal Operation operation;
+non terminal Operation factor;
+non terminal Operation term;
 
 
 
@@ -109,8 +108,9 @@ array_operations::=
                         LBRACKET operations_comma RBRACKET
                         ;
 operations_comma::=
-                        operation
-                        |operation COMMA operations_comma
+                        operation:o
+                        {: System.out.println(o.run()); :}
+                        |operation COMMA operations_comma 
                         ;
 
 unir::=
@@ -128,26 +128,31 @@ tupla::=
                         ;
                         
 operation::=
-                        expression op
+                        operation:o PLUS term:t
+                        {: RESULT=new Operation("+", o, t);:}
+                        |operation:o MINUS term:t
+                        {: RESULT=new Operation("-", o, t);:}
+                        |term:t 
+                        {:RESULT=t;:}
                         ;
-op::=
-                        PLUS expression op
-                        |MINUS expression op
-                        | 
-                        ;
-expression::=
-                        term ep
-                        ;
-ep::=
-                        DIVISION term ep
-                        |TIMES term ep
-                        |
-                        ;
+
 term::=
-                        LPAREN operation RPAREN
-                        |INTEGER
-                        |DECIMAL
-                        |MINUS term
+                        term:t TIMES factor:f
+                        {: RESULT=new Operation("*", t, f);:}
+                        |term:t DIVISION factor:f
+                        {: RESULT=new Operation("/", t, f);:}
+                        |factor:f 
+                        {: RESULT=f;:}
+                        ;
+factor::=
+                        INTEGER:val 
+                        {: RESULT=new Operation("n", val);:}
+                        |DECIMAL:val
+                        {: RESULT=new Operation("n", val);:}
+                        |LPAREN operation:op RPAREN
+                        {: RESULT=op;:}
+                        | MINUS factor:op
+                        {: RESULT=new Operation("minus", op, null);:}
                         ;
 
 cuerpo_pie::=

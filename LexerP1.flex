@@ -18,7 +18,7 @@ import com.achess.project1test.parser.sym;
 %eofval}
 
 LineTerminator = \r|\n|\r\n
-//WhiteSpace = {LineTerminator} | [ \t\f]
+WhiteSpace = {LineTerminator} | [ \t\f]
 
 /* Coments */
 InputCharacter = [^\r\n]
@@ -119,9 +119,9 @@ String = {Q}{StringContent}{Q}
 {RParen} 
 {return new Symbol(sym.RPAREN , yyline + 1, yycolumn + 1);}
 {Integer} 
-{return new Symbol(sym.INTEGER , yyline + 1, yycolumn + 1);}
+{return new Symbol(sym.INTEGER , yyline + 1, yycolumn + 1, new Double(yytext()));}
 {Decimal} 
-{return new Symbol(sym.DECIMAL , yyline + 1, yycolumn + 1);}
+{return new Symbol(sym.DECIMAL , yyline + 1, yycolumn + 1, new Double(yytext()));}
 
 {LBracket} 
 {return new Symbol(sym.LBRACKET , yyline + 1, yycolumn + 1);}
@@ -138,4 +138,7 @@ String = {Q}{StringContent}{Q}
 {Semicolon} 
 {return new Symbol(sym.SEMICOLON , yyline + 1, yycolumn + 1);}
 
-[^] {}
+{WhiteSpace} {/* Ignorar */}
+[^] {throw new RuntimeException("Caracter inesperado \""+yytext()+
+                                "\" ln:"+yyline+", col:"+yycolumn);
+                                }
