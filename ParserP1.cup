@@ -1,8 +1,7 @@
 package com.achess.project1test.parser;
 
-import java_cup.runtime.*;
 import com.achess.project1test.lexer.LexerP1;
-import com.achess.project1test.Operation;
+import com.achess.project1test.*;
 
 parser code {:
 
@@ -45,9 +44,9 @@ non terminal pie_types;
 
 non terminal array_strings;
 non terminal strings;
-non terminal array_operations;
+non terminal ArrayNode<Operation> array_operations;
 non terminal array_tuplas;
-non terminal operations_comma;
+non terminal ArrayNode<Operation> operations_comma;
 non terminal tuplas_comma;
 non terminal tupla;
 
@@ -102,17 +101,22 @@ strings::=
                         |STRING COMMA strings
                         ;
 ejey::=
-                        EJEY COLON array_operations
-                        ;
-array_operations::=     
-                        LBRACKET operations_comma RBRACKET
+                        EJEY COLON LBRACKET operations_comma:arr RBRACKET
+                        {: System.out.println(arr);:}                        
                         ;
 operations_comma::=
-                        operation:o
-                        {: System.out.println(o.run()); :}
-                        |operation COMMA operations_comma 
-                        ;
-
+                        operation:o COMMA operations_comma:nexts
+                        {: 
+                            ArrayNode<Operation> node = new ArrayNode<Operation>(o);
+                            node.setNext(nexts);
+                            RESULT = node;
+                        :}
+                        | operation: o
+                        {: 
+                            ArrayNode<Operation> node = new ArrayNode<Operation>(o);
+                            RESULT = node;
+                        :}                        
+                        ;                        
 unir::=
                         UNIR COLON array_tuplas
                         ;
