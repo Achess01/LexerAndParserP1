@@ -74,7 +74,7 @@ String = {Q}{StringContent}{Q}
 {Comment}
 {/* Ignorar */}
 {String} 
-{return new Symbol(sym.STRING , yyline + 1, yycolumn + 1);}
+{return new Symbol(sym.STRING , yyline + 1, yycolumn + 1, yytext());}
 {Def}
 {return new Symbol(sym.DEF , yyline + 1, yycolumn + 1);}
 {Barras}

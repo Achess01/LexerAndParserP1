@@ -15,7 +15,7 @@ terminal SEMICOLON, COLON, COMMA;
 terminal LBRACE, RBRACE;
 terminal LBRACKET, RBRACKET;
 terminal LPAREN, RPAREN;
-terminal STRING;
+terminal String STRING;
 
 terminal PLUS, MINUS, DIVISION, TIMES;
 terminal Double INTEGER, DECIMAL;
@@ -42,8 +42,8 @@ non terminal execute;
 
 non terminal pie_types;
 
-non terminal array_strings;
-non terminal strings;
+non terminal ArrayNode<String>array_strings;
+non terminal ArrayNode<String>strings_comma;
 non terminal ArrayNode<Operation> array_operations;
 non terminal ArrayNode<Operation> operations_comma;
 non terminal ArrayNode<Operation[]> tuplas_comma;
@@ -87,21 +87,50 @@ statement_barras::=
                         ;
 
 titulo::= 
-                        TITULO COLON STRING
+                        TITULO COLON STRING:st
+                        {:
+                          st = st.replaceAll("\"", "");
+                          System.out.println(st);
+                        :}
                         ;
 ejex::= 
-                        EJEX COLON array_strings
+                        EJEX COLON array_strings:arr
+                        {:
+                            System.out.println(arr);
+                        :}
                         ;
-array_strings::= 
-                        LBRACKET strings RBRACKET
+
+array_strings::=
+                        LBRACKET strings_comma:arr RBRACKET
+                        {:
+                            RESULT = arr;
+                        :}
                         ;
-strings::= 
-                        STRING
-                        |STRING COMMA strings
+strings_comma::= 
+                        STRING:st COMMA strings_comma:nexts
+                        {:
+                            st = st.replaceAll("\"", "");
+                            ArrayNode<String> node = new ArrayNode<String>(st);
+                            node.setNext(nexts);
+                            RESULT = node;
+                        :}
+                        |STRING:st
+                        {:
+                            st = st.replaceAll("\"", "");
+                            ArrayNode<String> node = new ArrayNode<String>(st);                            
+                            RESULT = node;
+                        :}
                         ;
 ejey::=
-                        EJEY COLON LBRACKET operations_comma:arr RBRACKET
-                        {: //System.out.println(arr);:}                        
+                        EJEY COLON array_operations:arr
+                        {: System.out.println(arr);:}                        
+                        ;
+
+array_operations::=         
+                        LBRACKET operations_comma:arr RBRACKET
+                        {:
+                            RESULT = arr;
+                        :}
                         ;
 operations_comma::=
                         operation:o COMMA operations_comma:nexts
@@ -119,11 +148,11 @@ operations_comma::=
 unir::=
                         UNIR COLON LBRACKET tuplas_comma:tuplas RBRACKET
                         {:
-                            System.out.println(tuplas.getValue()[0]);
+                           /*  System.out.println(tuplas.getValue()[0]);
                             System.out.println(tuplas.getValue()[1]);
                             tuplas = tuplas.getNext();
                             System.out.println(tuplas.getValue()[0]);
-                            System.out.println(tuplas.getValue()[1]);
+                            System.out.println(tuplas.getValue()[1]); */
                             
                         :}
                         ;
@@ -179,7 +208,7 @@ factor::=
                         ;
 
 cuerpo_pie::=
-                        statement_pie fin cuerpo_barras
+                        statement_pie fin cuerpo_pie
                         | statement_pie fin
                         ;
 statement_pie::=        
@@ -192,24 +221,41 @@ statement_pie::=
                         |extra 
                         ;                        
 etiquetas::=
-                        ETIQUETAS COLON array_strings
+                        ETIQUETAS COLON array_strings:arr
+                        {:
+                            System.out.println(arr);
+                        :}
                         ;
 valores::=
-                        VALORES COLON array_operations
+                        VALORES COLON array_operations:arr
+                        {:
+                            System.out.println(arr);
+                        :}
                         ;
 tipo::=
-                        TIPO COLON  pie_types
+                        TIPO COLON pie_types
                         ;
 pie_types::=
                         CANTIDAD
                         |PORCENTAJE
                         ;
 total::=
-                        TOTAL COLON operation
+                        TOTAL COLON operation:op
+                        {:
+                            System.out.println(op.run());
+                        :}
                         ;
 extra::=
-                        EXTRA COLON STRING
+                        EXTRA COLON STRING:st
+                        {:
+                            st = st.replaceAll("\"", "");
+                            System.out.println(st);
+                        :}
                         ;
 execute::=
-                        EJECUTAR LPAREN STRING RPAREN fin
+                        EJECUTAR LPAREN STRING:st RPAREN fin
+                        {:
+                            st = st.replaceAll("\"", "");
+                            System.out.println(st);
+                        :}
                         ;
