@@ -45,10 +45,9 @@ non terminal pie_types;
 non terminal array_strings;
 non terminal strings;
 non terminal ArrayNode<Operation> array_operations;
-non terminal array_tuplas;
 non terminal ArrayNode<Operation> operations_comma;
-non terminal tuplas_comma;
-non terminal tupla;
+non terminal ArrayNode<Operation[]> tuplas_comma;
+non terminal Operation[] tupla;
 
 non terminal Operation operation;
 non terminal Operation factor;
@@ -102,7 +101,7 @@ strings::=
                         ;
 ejey::=
                         EJEY COLON LBRACKET operations_comma:arr RBRACKET
-                        {: System.out.println(arr);:}                        
+                        {: //System.out.println(arr);:}                        
                         ;
 operations_comma::=
                         operation:o COMMA operations_comma:nexts
@@ -118,17 +117,37 @@ operations_comma::=
                         :}                        
                         ;                        
 unir::=
-                        UNIR COLON array_tuplas
-                        ;
-array_tuplas::=
-                        LBRACKET tuplas_comma RBRACKET
+                        UNIR COLON LBRACKET tuplas_comma:tuplas RBRACKET
+                        {:
+                            System.out.println(tuplas.getValue()[0]);
+                            System.out.println(tuplas.getValue()[1]);
+                            tuplas = tuplas.getNext();
+                            System.out.println(tuplas.getValue()[0]);
+                            System.out.println(tuplas.getValue()[1]);
+                            
+                        :}
                         ;
 tuplas_comma::= 
-                        tupla
-                        |tupla COMMA tuplas_comma
+                        tupla:tp COMMA tuplas_comma:prevs
+                        {:
+                            ArrayNode<Operation[]> node = new ArrayNode<Operation[]>(tp);
+                            node.setNext(prevs);
+                            RESULT = node;
+                        :}
+                        | tupla:tp
+                        {:
+                            ArrayNode<Operation[]> node = new ArrayNode<Operation[]>(tp);                            
+                            RESULT = node;
+                        :}
                         ;
 tupla::=
-                        LBRACE operation COMMA operation RBRACE
+                        LBRACE operation:x COMMA operation:y RBRACE
+                        {: 
+                            Operation[] array = new Operation[2];
+                            array[0] = x;
+                            array[1] = y;
+                            RESULT = array;
+                        :}
                         ;
                         
 operation::=

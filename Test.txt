@@ -2,7 +2,7 @@ def Barras{
     titulo: "Grafica1";
     ejex:["item1", "item2"];
     ejey:[5, 5 + 32, (345/(10*(-3.234+0.234)))];
-    unir:[{0,1}, {1,0}];
+    unir:[{0,20}, {1,0}];
 }
 
 Ejecutar("Hola amigos");
