@@ -28,19 +28,25 @@ terminal EJECUTAR;
 
 
 non terminal s, fin;
-non terminal graph, cuerpo_barras, statement_barras, cuerpo_pie, statement_pie;
-non terminal titulo;
-non terminal ejex;
-non terminal ejey;
-non terminal unir;
-non terminal etiquetas;
-non terminal valores;
-non terminal tipo;
-non terminal total;
-non terminal extra;
-non terminal execute;
+non terminal graph;
 
-non terminal pie_types;
+non terminal ArrayList<Attribute> cuerpo_barras; 
+non terminal Attribute statement_barras; 
+non terminal ArrayList<Attribute> cuerpo_pie;
+non terminal Attribute statement_pie;
+
+non terminal Attribute<String> titulo;
+non terminal Attribute<ArrayNode<String>> ejex;
+non terminal Attribute<ArrayNode<Operation>> ejey;
+non terminal Attribute<ArrayNode<Operation[]>> unir;
+non terminal Attribute<ArrayNode<String>> etiquetas;
+non terminal Attribute<ArrayNode<Operation>> valores;
+non terminal Attribute<String> tipo;
+non terminal Attribute<Operation> total;
+non terminal Attribute<String> extra;
+non terminal Attribute<String> execute;
+
+non terminal String pie_types;
 
 non terminal ArrayNode<String>array_strings;
 non terminal ArrayNode<String>strings_comma;
@@ -90,7 +96,7 @@ titulo::=
                         TITULO COLON STRING:st
                         {:
                           st = st.replaceAll("\"", "");
-                          System.out.println(st);
+                          System.out.println(st);                          
                         :}
                         ;
 ejex::= 

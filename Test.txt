@@ -1,8 +1,8 @@
 def Barras{
-            	titulo: "Grafica 1";
-            	ejex:["item1", "item2"];
-            	ejey:[5, 9];
-            	unir:[{0,1}, {1,0}];
+            titulo: "Grafica 1";
+            ejex:["item1", "item2"];
+            ejey:[5, 9];
+            unir:[{0,1}, {1,0}];
 		#Aqui termine
 }
 #Aqui estoy definiendo varios gráficos de Pie
