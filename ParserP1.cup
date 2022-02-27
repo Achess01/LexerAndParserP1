@@ -1,7 +1,7 @@
-package com.achess.project1test.parser;
+package com.achess.practica1.parser;
 
-import com.achess.project1test.lexer.LexerP1;
-import com.achess.project1test.*;
+import com.achess.practica1.lexer.LexerP1;
+import com.achess.practica1.*;
 import java.util.ArrayList;
 
 parser code {:
@@ -29,7 +29,7 @@ terminal EJECUTAR;
 
 
 non terminal s, fin;
-non terminal graph;
+non terminal ChartCode chart;
 
 non terminal ArrayList<Attribute> cuerpo_barras; 
 non terminal Attribute statement_barras; 
@@ -67,36 +67,38 @@ non terminal Operation term;
 
 
 s::= 
-                        graph s
-                        |execute s
-                        | graph
-                        | execute
+                        chart:cht s
+                        {:
+                            Execute.getExecute().addChart(cht);
+                        :}
+                        |execute:ex s
+                        {:
+                            Execute.getExecute().addExecuteCall(ex);
+                        :}
+                        | chart:cht
+                        {:
+                            Execute.getExecute().addChart(cht);
+                        :}
+                        | execute:ex
+                        {:
+                            Execute.getExecute().addExecuteCall(ex);
+                        :}
                         ;
 
 fin::= 
                         SEMICOLON
                         ;
 
-graph::= 
+chart::= 
                         DEF BARRAS LBRACE cuerpo_barras:arr RBRACE
                         {:
                             BarChartCode chart = Validate.validateBar(arr);
-                            if(chart != null){
-                                System.out.println(chart);
-                            }
-                            else{
-                                System.out.println("Mamaste");
-                            }
+                            RESULT = chart;
                         :}
                         |DEF PIE LBRACE cuerpo_pie:arr RBRACE
                         {:
                             PieChartCode chart = Validate.validatePie(arr);
-                            if(chart != null){
-                                System.out.println(chart);
-                            }
-                            else{
-                                System.out.println("Mamaste");
-                            }
+                            RESULT = chart;
                         :}
                         ;
 
