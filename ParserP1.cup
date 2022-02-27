@@ -88,7 +88,16 @@ graph::=
                                 System.out.println("Mamaste");
                             }
                         :}
-                        |DEF PIE LBRACE cuerpo_pie RBRACE
+                        |DEF PIE LBRACE cuerpo_pie:arr RBRACE
+                        {:
+                            PieChartCode chart = Validate.validatePie(arr);
+                            if(chart != null){
+                                System.out.println(chart);
+                            }
+                            else{
+                                System.out.println("Mamaste");
+                            }
+                        :}
                         ;
 
 cuerpo_barras::= 
@@ -246,17 +255,47 @@ factor::=
                         ;
 
 cuerpo_pie::=
-                        statement_pie fin cuerpo_pie
-                        | statement_pie fin
+                        statement_pie:att fin cuerpo_pie:arr
+                        {:                           
+                            arr.add(att);
+                            RESULT = arr;
+                        :}
+                        | statement_pie:att fin
+                        {:
+                            ArrayList<Attribute> attributes = new ArrayList<>();
+                            attributes.add(att);
+                            RESULT = attributes;
+                        :}
                         ;
 statement_pie::=        
-                        titulo
-                        |etiquetas
-                        |valores
-                        |unir
-                        |tipo
-                        |total 
-                        |extra 
+                        titulo:ti
+                        {:
+                            RESULT = ti;
+                        :}
+                        |etiquetas:et
+                        {:
+                            RESULT = et;
+                        :}
+                        |valores:va
+                        {:
+                            RESULT = va;
+                        :}
+                        |unir:u
+                        {:
+                            RESULT = u;
+                        :}
+                        |tipo:tp
+                        {:
+                            RESULT = tp;
+                        :}
+                        |total:to
+                        {:
+                            RESULT = to;
+                        :} 
+                        |extra:ex 
+                        {:
+                            RESULT = ex;
+                        :}
                         ;                        
 etiquetas::=
                         ETIQUETAS COLON array_strings:arr
