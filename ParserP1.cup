@@ -80,7 +80,7 @@ fin::=
 graph::= 
                         DEF BARRAS LBRACE cuerpo_barras:arr RBRACE
                         {:
-                            BarChartCode chart = Validate.validate(arr);
+                            BarChartCode chart = Validate.validateBar(arr);
                             if(chart != null){
                                 System.out.println(chart);
                             }
