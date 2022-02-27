@@ -2,9 +2,9 @@ package com.achess.project1test.parser;
 
 import com.achess.project1test.lexer.LexerP1;
 import com.achess.project1test.*;
+import java.util.ArrayList;
 
 parser code {:
-
     public ParserP1(LexerP1 lexer){
         super(lexer);
     }
@@ -22,7 +22,8 @@ terminal Double INTEGER, DECIMAL;
 // Graphs definition
 terminal DEF, BARRAS, PIE;
 terminal TITULO, EJEX, EJEY, UNIR;
-terminal ETIQUETAS, VALORES, TIPO, EXTRA, CANTIDAD, PORCENTAJE, TOTAL;
+terminal ETIQUETAS, VALORES, TIPO, EXTRA, TOTAL;
+terminal String CANTIDAD, PORCENTAJE;
 
 terminal EJECUTAR;
 
@@ -44,7 +45,7 @@ non terminal Attribute<ArrayNode<Operation>> valores;
 non terminal Attribute<String> tipo;
 non terminal Attribute<Operation> total;
 non terminal Attribute<String> extra;
-non terminal Attribute<String> execute;
+non terminal String execute;
 
 non terminal String pie_types;
 
@@ -77,32 +78,64 @@ fin::=
                         ;
 
 graph::= 
-                        DEF BARRAS LBRACE cuerpo_barras RBRACE
+                        DEF BARRAS LBRACE cuerpo_barras:arr RBRACE
+                        {:
+                            BarChartCode chart = Validate.validate(arr);
+                            if(chart != null){
+                                System.out.println(chart);
+                            }
+                            else{
+                                System.out.println("Mamaste");
+                            }
+                        :}
                         |DEF PIE LBRACE cuerpo_pie RBRACE
                         ;
 
 cuerpo_barras::= 
-                        statement_barras fin cuerpo_barras
-                        |statement_barras fin
+                        statement_barras:att fin cuerpo_barras:arr
+                        {:
+                            arr.add(att);
+                            RESULT = arr;
+                        :}
+                        |statement_barras:att fin
+                        {:
+                            ArrayList<Attribute> attributes = new ArrayList<>();
+                            attributes.add(att);
+                            RESULT = attributes;
+                        :}
                         ;
 statement_barras::= 
-                        titulo  
-                        |ejex  
-                        |ejey  
-                        |unir  
+                        titulo:ti  
+                        {:
+                            RESULT = ti;
+                        :}
+                        |ejex:ex  
+                        {:
+                            RESULT = ex;
+                        :}
+                        |ejey :ey 
+                        {:
+                            RESULT = ey;
+                        :}
+                        |unir:u  
+                        {:
+                            RESULT = u;
+                        :}
                         ;
 
 titulo::= 
                         TITULO COLON STRING:st
                         {:
                           st = st.replaceAll("\"", "");
-                          System.out.println(st);                          
+                          Attribute<String> att = new Attribute<>(st, Attribute.TITULO, stleft);
+                          RESULT = att;
                         :}
                         ;
 ejex::= 
                         EJEX COLON array_strings:arr
                         {:
-                            System.out.println(arr);
+                            Attribute<ArrayNode<String>> att = new Attribute<>(arr, Attribute.EJEX, arrleft);
+                            RESULT = att;
                         :}
                         ;
 
@@ -129,7 +162,10 @@ strings_comma::=
                         ;
 ejey::=
                         EJEY COLON array_operations:arr
-                        {: System.out.println(arr);:}                        
+                        {: 
+                            Attribute<ArrayNode<Operation>> att = new Attribute<>(arr, Attribute.EJEY, arrleft);
+                            RESULT = att;
+                        :}                        
                         ;
 
 array_operations::=         
@@ -154,12 +190,8 @@ operations_comma::=
 unir::=
                         UNIR COLON LBRACKET tuplas_comma:tuplas RBRACKET
                         {:
-                           /*  System.out.println(tuplas.getValue()[0]);
-                            System.out.println(tuplas.getValue()[1]);
-                            tuplas = tuplas.getNext();
-                            System.out.println(tuplas.getValue()[0]);
-                            System.out.println(tuplas.getValue()[1]); */
-                            
+                           Attribute<ArrayNode<Operation[]>> att = new Attribute<>(tuplas, Attribute.UNIR, tuplasleft);
+                           RESULT = att;                           
                         :}
                         ;
 tuplas_comma::= 
@@ -229,39 +261,53 @@ statement_pie::=
 etiquetas::=
                         ETIQUETAS COLON array_strings:arr
                         {:
-                            System.out.println(arr);
+                            Attribute<ArrayNode<String>> att = new Attribute<>(arr, Attribute.ETIQUETAS, arrleft);
+                            RESULT = att;
                         :}
                         ;
 valores::=
                         VALORES COLON array_operations:arr
                         {:
-                            System.out.println(arr);
+                            Attribute<ArrayNode<Operation>> att = new Attribute<>(arr, Attribute.VALORES, arrleft);
+                            RESULT = att;
                         :}
                         ;
 tipo::=
-                        TIPO COLON pie_types
+                        TIPO COLON pie_types:st
+                        {:
+                            Attribute<String> att = new Attribute<>(st, Attribute.TIPO, stleft);
+                            RESULT = att;
+                        :}
                         ;
 pie_types::=
-                        CANTIDAD
-                        |PORCENTAJE
+                        CANTIDAD:st
+                        {:
+                            RESULT = st;
+                        :}
+                        |PORCENTAJE:st
+                        {:
+                            RESULT = st;
+                        :}
                         ;
 total::=
                         TOTAL COLON operation:op
                         {:
-                            System.out.println(op.run());
+                            Attribute<Operation> att = new Attribute<>(op, Attribute.TOTAL, opleft);
+                            RESULT = att;
                         :}
                         ;
 extra::=
                         EXTRA COLON STRING:st
                         {:
                             st = st.replaceAll("\"", "");
-                            System.out.println(st);
+                            Attribute<String> att = new Attribute<>(st, Attribute.EXTRA, stleft);
+                            RESULT = att;
                         :}
                         ;
 execute::=
                         EJECUTAR LPAREN STRING:st RPAREN fin
                         {:
-                            st = st.replaceAll("\"", "");
-                            System.out.println(st);
+                            st = st.replaceAll("\"", "");                            
+                            RESULT = st;
                         :}
                         ;

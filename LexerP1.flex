@@ -102,9 +102,9 @@ String = {Q}{StringContent}{Q}
 {Ejecutar} 
 {return new Symbol(sym.EJECUTAR , yyline + 1, yycolumn + 1);}
 {Cantidad} 
-{return new Symbol(sym.CANTIDAD , yyline + 1, yycolumn + 1);}
+{return new Symbol(sym.CANTIDAD , yyline + 1, yycolumn + 1, yytext());}
 {Porcentaje} 
-{return new Symbol(sym.PORCENTAJE , yyline + 1, yycolumn + 1);}
+{return new Symbol(sym.PORCENTAJE , yyline + 1, yycolumn + 1, yytext());}
 
 {Plus} 
 {return new Symbol(sym.PLUS , yyline + 1, yycolumn + 1);}
