@@ -37,3 +37,5 @@ extra: "Resto";
 }
 #Aqui ejecutar la gráfica 1 y puedo ejecutar más de una grafica
 Ejecutar ("Grafica 1");
+Ejecutar("Grafica 2");
+Ejecutar("Grafica 3");
