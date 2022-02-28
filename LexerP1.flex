@@ -1,7 +1,7 @@
-package com.achess.practica1.lexer;
+package com.example.practica1.parserLexer.lexer;
 
 import java_cup.runtime.*;
-import com.achess.practica1.parser.sym;
+import com.example.practica1.parserLexer.parser.sym;
 %%
 
 %class LexerP1

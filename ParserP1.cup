@@ -1,7 +1,7 @@
-package com.achess.practica1.parser;
+package com.example.practica1.parserLexer.parser;
 
-import com.achess.practica1.lexer.LexerP1;
-import com.achess.practica1.*;
+import com.example.practica1.parserLexer.lexer.LexerP1;
+import com.example.practica1.parserLexer.*;
 import java.util.ArrayList;
 
 parser code {:
